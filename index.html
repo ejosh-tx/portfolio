@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="css/main.bundle.css">
+  <script src="https://kit.fontawesome.com/4e5a72c756.js"></script>
+</head>
+
+<body>
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <div class="container">
+        <div class="level">
+          <div class="level-item has-text-centered">
+            <figure class="image is-128x128">
+              <img class="is-rounded" src="img/me-big.png" onerror="this.src='https://placehold.co/128x128'" />
+            </figure>
+          </div>
+        </div>
+        <div class="columns has-text-centered">
+          <div class="column">
+            <h1 class="title is-1" id="name"></h1>
+            <h2 class="subtitle" id="title"></h2>
+            <span>
+              <a id="github-contact" target="_blank" class="icon is-large has-text-light">
+                <i class="fab fa-2x fa-github"></i> <strong id="github-text"></strong>
+              </a>
+            </span>
+            <span>
+              <a id="linkedin-contact" target="_blank" class="icon is-large has-text-light">
+                <i class="fab fa-2x fa-linkedin"></i> <strong id="linkedin-text"></strong>
+              </a>
+            </span>
+            <span>
+              <a id="leetcode-contact" target="_blank" class="icon is-large has-text-light">
+                <i class="fas fa-2x fa-code"></i>
+              </a>
+            </span>
+            <span>
+              <a id="email-contact" class="icon is-large has-text-light">
+                <i class="fas fa-2x fa-envelope"></i> <strong id="email-text"></strong>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">About Me</h1>
+      <hr />
+      <p id="about-summary"></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Experience</h1>
+      <hr />
+      <div id="experience-container"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Education</h1>
+      <hr />
+      <div id="education-container"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Projects</h1>
+      <hr />
+      <div id="projects-container"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Contact</h1>
+      <hr />
+      <nav class="level">
+        <div class="level-item has-text-centered">
+          <div>
+            <a id="github-contact" class="icon is-large" target="_blank">
+              <i class="fab fa-2x fa-github"></i>
+            </a>
+            <p class="heading"><a id="github-text" href="#">Github</a></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <a id="linkedin-contact" class="icon is-large" target="_blank">
+              <i class="fab fa-2x fa-linkedin"></i>
+            </a>
+            <p class="heading"><a id="linkedin-text" href="#">LinkedIn</a></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <a id="leetcode-contact" class="icon is-large" target="_blank">
+              <i class="fas fa-2x fa-code"></i>
+            </a>
+            <p class="heading"><a id="leetcode-text">LeetCode</a></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <a id="email-contact" class="icon is-large" target="_blank">
+              <i class="fas fa-2x fa-envelope"></i>
+            </a>
+            <p class="heading"><a id="email-text" href="#">Email</a></p>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Project Modals Container -->
+  <div id="project-modals"></div>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <span id="copyright-text"></span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/constants.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const portfolioData = window.Portfolio();
+      const { personalInfo } = portfolioData;
+
+      // Update personal info
+      document.getElementById('name').textContent = personalInfo.name;
+      document.getElementById('title').textContent = `${personalInfo.title}, ${personalInfo.location}`;
+      document.getElementById('about-summary').textContent = portfolioData.about.summary;
+
+      // Update social links
+      const updateLink = (elementId, url) => {
+        const elements = document.querySelectorAll(`#${elementId}`);
+        elements.forEach(element => {
+          if (element) { element.href = url; }
+        });
+      };
+
+      // Update GitHub links
+      updateLink('github-contact', personalInfo.github);
+      updateLink('github-text', personalInfo.github);
+
+      // Update LinkedIn links
+      updateLink('linkedin-contact', personalInfo.linkedin);
+      updateLink('linkedin-text', personalInfo.linkedin);
+
+      // Update LeetCode links
+      updateLink('leetcode-contact', 'https://leetcode.com/u/ejosh_tx/');
+      updateLink('leetcode-text', 'https://leetcode.com/u/ejosh_tx/');
+
+      // Update email links
+      updateLink('email-contact', `mailto:${personalInfo.email}`);
+      updateLink('email-text', `mailto:${personalInfo.email}`);
+
+      // Update experience
+      const experienceContainer = document.getElementById('experience-container');
+      portfolioData.experience.forEach(exp => {
+        const card = document.createElement('div');
+        card.className = 'card card-gap';
+        card.innerHTML = `
+          <div class="card-content">
+            <div class="media">
+              <div class="media-left">
+                <figure class="image is-48x48">
+                  <img class="is-rounded" src="img/${exp.company.toLowerCase().replace(/\s+/g, '-')}-logo.png"
+                       onerror="this.src='https://placehold.co/48x48'" 
+                       alt="${exp.company} logo">
+                </figure>
+              </div>
+              <div class="media-content">
+                <p class="title is-4">${exp.company}</p>
+                <p class="subtitle is-6">${exp.position} - ${exp.period}</p>
+              </div>
+            </div>
+            <div class="content">
+              <p>${exp.description}</p>
+              ${exp.details && exp.details.length > 0 ? `
+                <ul>
+                  ${exp.details.map(detail => `<li>${detail}</li>`).join('')}
+                </ul>
+              ` : ''}
+              ${exp.skills.length > 0 ? `
+                <div class="tags">
+                  ${exp.skills.map(skill => `<span class="tag">${skill}</span>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        experienceContainer.appendChild(card);
+      });
+
+      // Update education
+      const educationContainer = document.getElementById('education-container');
+      portfolioData.education.forEach(edu => {
+        const card = document.createElement('div');
+        card.className = 'card card-gap';
+        card.innerHTML = `
+          <div class="card-content">
+            <div class="media">
+              <div class="media-left">
+                <figure class="image is-48x48">
+                  <img class="is-rounded" src="img/${edu.institution.toLowerCase().replace(/\s+/g, '-')}-logo.png" 
+                       onerror="this.src='https://placehold.co/48x48'" 
+                       alt="${edu.institution} logo">
+                </figure>
+              </div>
+              <div class="media-content">
+                <p class="title is-4">${edu.institution}</p>
+                <p class="subtitle is-6">${edu.degree} - ${edu.period}</p>
+              </div>
+            </div>
+            <div class="content">
+              <p>${edu.description}</p>
+            </div>
+          </div>
+        `;
+        educationContainer.appendChild(card);
+      });
+
+      // Update projects
+      const projectsContainer = document.getElementById('projects-container');
+      const projectModalsContainer = document.getElementById('project-modals');
+
+      // Create two rows of 3 projects each
+      const projects = portfolioData.projects;
+      const rows = Math.ceil(projects.length / 3);
+
+      for (let row = 0; row < rows; row++) {
+        const tileAncestor = document.createElement('div');
+        tileAncestor.className = 'tile is-ancestor';
+
+        const tileVertical = document.createElement('div');
+        tileVertical.className = 'tile is-vertical is-12';
+
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+
+        // Add up to 3 projects per row
+        for (let col = 0; col < 3; col++) {
+          const index = row * 3 + col;
+          if (index >= projects.length) break;
+
+          const project = projects[index];
+          const modalId = `project-${index + 1}-modal`;
+
+          const tileParent = document.createElement('div');
+          tileParent.className = 'tile is-parent';
+          tileParent.innerHTML = `
+            <article class="tile is-child notification">
+              <p class="title">${project.title}</p>
+              <figure class="image is-4by3">
+                <img class="modal-trigger" data-target="${modalId}" 
+                     src="img/project-${index + 1}-cover.png" 
+                     onerror="this.src='https://placehold.co/640x480'"
+                     alt="${project.title} cover">
+              </figure>
+            </article>
+          `;
+          tile.appendChild(tileParent);
+        }
+
+        tileVertical.appendChild(tile);
+        tileAncestor.appendChild(tileVertical);
+        projectsContainer.appendChild(tileAncestor);
+      }
+
+      // Create modals for each project
+      portfolioData.projects.forEach((project, index) => {
+        const modalId = `project-${index + 1}-modal`;
+        const carouselId = `${modalId}-carousel`;
+
+        const modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal';
+        modal.innerHTML = `
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">${project.title}</p>
+              <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <div id="${carouselId}" class="carousel">
+                ${project.images && project.images.length > 0 ?
+            project.images.map((img, imgIndex) => `
+                    <figure class="image is-4by3 carousel-cell">
+                      <img src="img/carousel/${img}" alt="${project.title} image ${imgIndex + 1}">
+                    </figure>
+                  `).join('') :
+            `<figure class="image is-4by3 carousel-cell">
+                    <img src="img/project-${index + 1}-cover.png" 
+                         onerror="this.src='https://placehold.co/640x480'"
+                         alt="${project.title} cover">
+                  </figure>`
+          }
+              </div>
+
+              <div class="content">
+                <p>${project.description}</p>
+                ${project.technologies.length > 0 ? `
+                  <div class="tags">
+                    ${project.technologies.map(tech => `<span class="tag">${tech}</span>`).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-success">Close</button>
+            </footer>
+          </div>
+        `;
+        projectModalsContainer.appendChild(modal);
+      });
+
+      // Update copyright year and name
+      const currentYear = new Date().getFullYear();
+      document.getElementById('copyright-text').textContent =
+        `Copyright © ${currentYear}. All rights reserved.`;
+
+      // Load bundle.js after creating all elements
+      const script = document.createElement('script');
+      script.src = 'js/bundle.js';
+      document.body.appendChild(script);
+    });
+  </script>
+</body>
+
+</html>
